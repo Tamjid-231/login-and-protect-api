@@ -1,0 +1,27 @@
+﻿FlyRank A3 live PostgreSQL evidence
+Generated inside the running db container.
+
+=== Tables ===
+List of relations
+ Schema | Name  | Type  |  Owner   
+--------+-------+-------+----------
+ public | tasks | table | postgres
+(1 row)
+
+=== Task rows before full-stack restart ===
+id |             title             | done 
+----+-------------------------------+------
+  1 | Read the assignment           | t
+  2 | Connect the API to PostgreSQL | f
+  3 | Test database persistence     | f
+  4 | Persistence proof             | t
+(4 rows)
+
+=== Task rows after docker compose down + up ===
+id |             title             | done 
+----+-------------------------------+------
+  1 | Read the assignment           | t
+  2 | Connect the API to PostgreSQL | f
+  3 | Test database persistence     | f
+  4 | Persistence proof             | t
+(4 rows)

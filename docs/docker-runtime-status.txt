@@ -1,0 +1,16 @@
+﻿PASS
+PersistenceTaskId=4
+
+=== Persistence response after full-stack restart ===
+HTTP/1.1 200 OK
+date: Tue, 22 Sep 2026 10:34:08 GMT
+server: uvicorn
+content-length: 48
+content-type: application/json
+
+{"id":4,"title":"Persistence proof","done":true}
+
+=== docker compose ps ===
+NAME                IMAGE                COMMAND                  SERVICE   CREATED          STATUS                    PORTS
+assignment2-api-1   assignment2-api      "uvicorn app.main:apΓÇª"   api       12 seconds ago   Up 5 seconds              0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+assignment2-db-1    postgres:16-alpine   "docker-entrypoint.sΓÇª"   db        12 seconds ago   Up 11 seconds (healthy)   5432/tcp

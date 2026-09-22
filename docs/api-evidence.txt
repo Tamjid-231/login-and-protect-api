@@ -1,0 +1,45 @@
+FlyRank A3 live API evidence
+Generated from the running Docker Compose stack on 2026-09-22.
+
+=== GET /health ===
+HTTP/1.1 200 OK
+content-type: application/json
+
+{"status":"ok","db":"ok"}
+
+=== GET /tasks (initial three seeds) ===
+HTTP/1.1 200 OK
+content-type: application/json
+
+[{"id":1,"title":"Read the assignment","done":true},{"id":2,"title":"Connect the API to PostgreSQL","done":false},{"id":3,"title":"Test database persistence","done":false}]
+
+=== GET /tasks/999 ===
+HTTP/1.1 404 Not Found
+content-type: application/json
+
+{"error":"Task not found"}
+
+=== POST /tasks with an empty title ===
+HTTP/1.1 400 Bad Request
+content-type: application/json
+
+{"error":"Value error, title must not be empty"}
+
+=== POST /tasks ===
+{"id":4,"title":"Persistence proof","done":false}
+
+=== PUT /tasks/4 ===
+{"id":4,"title":"Persistence proof","done":true}
+
+=== DELETE temporary task, then GET it ===
+HTTP/1.1 404 Not Found
+content-type: application/json
+
+{"error":"Task not found"}
+
+=== GET /tasks/4 after docker compose down + up ===
+HTTP/1.1 200 OK
+content-type: application/json
+
+{"id":4,"title":"Persistence proof","done":true}
+

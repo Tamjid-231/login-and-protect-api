@@ -1,0 +1,8 @@
+Command: python -m pytest -q
+Date: 2026-09-22
+
+..................................                                       [100%]
+34 passed, 8 warnings in 1.00s
+
+The warnings are deprecation notices from Starlette/FastAPI running on
+Python 3.14. They are not application failures.

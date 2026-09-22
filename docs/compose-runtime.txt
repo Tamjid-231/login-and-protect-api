@@ -1,0 +1,48 @@
+﻿name: assignment2
+services:
+  api:
+    build:
+      context: C:\Users\LAPTOP HEAVEN\Documents\FlyRank Intern'ship\Assignment\Week-3\Assignment
+        2
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+        required: true
+    environment:
+      DATABASE_URL: postgresql://postgres:dev@db:5432/tasks
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 3000
+        published: "3000"
+        protocol: tcp
+    restart: unless-stopped
+  db:
+    environment:
+      POSTGRES_DB: tasks
+      POSTGRES_PASSWORD: dev
+      POSTGRES_USER: postgres
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U postgres -d tasks
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    image: postgres:16-alpine
+    networks:
+      default: null
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: taskdata
+        target: /var/lib/postgresql/data
+        volume: {}
+networks:
+  default:
+    name: assignment2_default
+volumes:
+  taskdata:
+    name: assignment2_taskdata
