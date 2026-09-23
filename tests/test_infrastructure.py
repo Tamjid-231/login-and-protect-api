@@ -50,6 +50,24 @@ def test_compose_uses_environment_interpolation_and_no_source_mount():
     assert api["environment"]["DATABASE_URL"] == "${DATABASE_URL}"
 
 
+def test_compose_api_healthcheck_calls_the_public_health_endpoint():
+    api = load_compose()["services"]["api"]
+    healthcheck = api["healthcheck"]
+
+    assert healthcheck["test"] == [
+        "CMD",
+        "python",
+        "-c",
+        (
+            "import urllib.request; "
+            "urllib.request.urlopen('http://localhost:3000/health', timeout=3)"
+        ),
+    ]
+    assert healthcheck["interval"] == "10s"
+    assert healthcheck["timeout"] == "5s"
+    assert healthcheck["retries"] == 5
+
+
 def test_dockerfile_runs_non_root_api_on_port_3000():
     dockerfile = read("Dockerfile")
     assert dockerfile.startswith("FROM python:3.12-slim")
