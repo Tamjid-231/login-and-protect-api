@@ -84,3 +84,16 @@ def test_docker_context_excludes_secrets_and_generated_files():
     assert "__pycache__" in excluded
     assert ".pytest_cache" in excluded
     assert ".git" in excluded
+
+
+def test_ci_workflow_installs_dependencies_and_runs_the_test_suite():
+    workflow_path = PROJECT_ROOT / ".github" / "workflows" / "tests.yml"
+    workflow = yaml.load(workflow_path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+    steps = workflow["jobs"]["test"]["steps"]
+    uses = [step.get("uses", "") for step in steps]
+    commands = "\n".join(step.get("run", "") for step in steps)
+
+    assert any(item.startswith("actions/checkout@") for item in uses)
+    assert any(item.startswith("actions/setup-python@") for item in uses)
+    assert "pip install -r requirements-dev.txt" in commands
+    assert "python -m pytest -q" in commands
