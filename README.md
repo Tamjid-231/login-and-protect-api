@@ -21,6 +21,9 @@ This shows why storage is an implementation detail: an API client can use the sa
 
 ```text
 Assignment 2/
+|-- .github/
+|   `-- workflows/
+|       `-- tests.yml
 |-- app/
 |   |-- __init__.py
 |   |-- main.py
@@ -29,8 +32,11 @@ Assignment 2/
 |   |-- api-evidence.txt
 |   |-- database-content.png
 |   |-- database-evidence.txt
+|   |-- schema.sql
 |   |-- test-results.txt
 |   `-- verification-summary.md
+|-- examples/
+|   `-- requests.http
 |-- tests/
 |   |-- conftest.py
 |   |-- test_api.py
@@ -43,6 +49,7 @@ Assignment 2/
 |-- Dockerfile
 |-- requirements.txt
 |-- requirements-dev.txt
+|-- SUBMISSION_CHECKLIST.md
 `-- README.md
 ```
 
