@@ -135,6 +135,10 @@ Every error is JSON, for example:
 
 ## Request examples
 
+The ready-to-run [`examples/requests.http`](examples/requests.http) collection covers
+the health check and every CRUD route. It works with the VS Code REST Client and
+JetBrains HTTP Client.
+
 Create a task:
 
 ```bash

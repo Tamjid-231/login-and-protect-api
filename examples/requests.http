@@ -1,0 +1,30 @@
+@baseUrl = http://localhost:3000
+
+### Health check
+GET {{baseUrl}}/health
+
+### List tasks
+GET {{baseUrl}}/tasks
+
+### Create a task
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Review Docker persistence"
+}
+
+### Get a task
+GET {{baseUrl}}/tasks/4
+
+### Update a task
+PUT {{baseUrl}}/tasks/4
+Content-Type: application/json
+
+{
+  "title": "Review Docker persistence",
+  "done": true
+}
+
+### Delete a task
+DELETE {{baseUrl}}/tasks/4
