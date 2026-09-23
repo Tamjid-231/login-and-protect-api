@@ -99,7 +99,7 @@ The real `.env` file is ignored by Git. No connection string or password is stor
 
 ## Database initialization
 
-When the API starts, it retries the database connection while PostgreSQL becomes ready. It creates this table if it is missing:
+When the API starts, it retries the database connection while PostgreSQL becomes ready. The same definition is available in [`docs/schema.sql`](docs/schema.sql) for quick review. It creates this table if it is missing:
 
 ```sql
 CREATE TABLE IF NOT EXISTS tasks (
