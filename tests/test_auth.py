@@ -104,3 +104,19 @@ def test_provider_outage_is_not_an_authentication_failure(client, auth_service):
     auth_service['offline'] = True
     result = client.get('/protected/profile', headers={'Authorization': 'Bearer valid-token'})
     assert result.status_code == 503
+
+
+@pytest.mark.parametrize('path,method', [('/protected/dashboard', 'get'), ('/auth/logout', 'post')])
+def test_guard_reused_for_dashboard_and_logout(client, path, method):
+    assert getattr(client, method)(path).status_code == 401
+    assert getattr(client, method)(path, headers={'Authorization': 'Bearer tampered-token'}).status_code == 401
+    good = getattr(client, method)(path, headers={'Authorization': 'Bearer valid-token'})
+    assert good.status_code == (204 if method == 'post' else 200)
+
+
+def test_logout_targets_callers_session_and_has_no_body(client, auth_service):
+    for token in ['valid-token', 'second-token']:
+        result = client.post('/auth/logout', headers={'Authorization': f'Bearer {token}'})
+        assert result.status_code == 204
+        assert result.content == b''
+    assert auth_service['logout'] == [('Bearer valid-token', 'local'), ('Bearer second-token', 'local')]

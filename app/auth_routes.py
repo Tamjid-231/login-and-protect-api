@@ -14,8 +14,7 @@ def public_info():
     return {'message': 'Welcome stranger! This info is public.'}
 
 
-@router.get('/protected/profile', tags=['Protected'])
-def profile(request: Request, client=Depends(get_auth_client)):
+def require_user(request: Request, client=Depends(get_auth_client)):
     parts = request.headers.get('Authorization', '').split()
     if len(parts) != 2 or parts[0].lower() != 'bearer':
         raise HTTPException(401, 'Access token required', headers={'WWW-Authenticate': 'Bearer'})
@@ -27,7 +26,31 @@ def profile(request: Request, client=Depends(get_auth_client)):
         raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'}) from None
     if result is None or result.user is None:
         raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'})
-    return safe_user(result.user)
+    return result.user, parts[1]
+
+
+@router.get('/protected/profile', tags=['Protected'])
+def profile(identity=Depends(require_user)):
+    return safe_user(identity[0])
+
+
+@router.get('/protected/dashboard', tags=['Protected'])
+def dashboard(identity=Depends(require_user)):
+    return {'message': 'Welcome to your dashboard!', 'user_id': identity[0].id}
+
+
+@router.post('/auth/logout', status_code=204, tags=['Authentication'])
+def logout(identity=Depends(require_user), client=Depends(get_auth_client)):
+    try:
+        # This SDK method posts the verified caller's JWT to /logout. Unlike
+        # sign_out(), it works without a stored session and propagates errors.
+        # No service-role key or shared server session is used.
+        client.auth.admin.sign_out(identity[1], scope='local')
+    except (HTTPError, AuthRetryableError):
+        raise HTTPException(503, 'Authentication service unavailable') from None
+    except AuthApiError:
+        raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'}) from None
+    return Response(status_code=204)
 
 
 class Credentials(BaseModel):
