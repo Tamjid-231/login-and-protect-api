@@ -8,9 +8,11 @@ from fastapi import FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException
 from pydantic import BaseModel, ConfigDict, StrictBool, field_validator
 
 from app import repository
+from app.auth_routes import router as auth_router
 
 
 @asynccontextmanager
@@ -25,6 +27,12 @@ app = FastAPI(
     description="A beginner-friendly PostgreSQL CRUD API for managing tasks.",
     lifespan=lifespan,
 )
+app.include_router(auth_router)
+
+
+@app.exception_handler(HTTPException)
+async def http_error_handler(_: Request, exc: HTTPException):
+    return JSONResponse(status_code=exc.status_code, content={'error': exc.detail}, headers=exc.headers)
 
 
 class Task(BaseModel):
