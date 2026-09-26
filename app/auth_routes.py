@@ -1,5 +1,5 @@
 """Authentication endpoints backed by Supabase Auth."""
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Request
 from httpx import HTTPError
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from supabase_auth.errors import AuthApiError, AuthRetryableError
@@ -7,6 +7,20 @@ from supabase_auth.errors import AuthApiError, AuthRetryableError
 from app.auth_client import get_auth_client
 
 router = APIRouter()
+
+
+@router.get('/public/info', tags=['Public'])
+def public_info():
+    return {'message': 'Welcome stranger! This info is public.'}
+
+
+@router.get('/protected/profile', tags=['Protected'])
+def profile(request: Request):
+    parts = request.headers.get('Authorization', '').split()
+    if len(parts) != 2 or parts[0].lower() != 'bearer':
+        raise HTTPException(401, 'Access token required', headers={'WWW-Authenticate': 'Bearer'})
+    # Stage 2 is deliberately fail-closed until remote verification is added.
+    raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'})
 
 
 class Credentials(BaseModel):
