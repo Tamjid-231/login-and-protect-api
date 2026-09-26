@@ -1,5 +1,6 @@
 """Authentication endpoints backed by Supabase Auth."""
 from fastapi import APIRouter, Depends, HTTPException, Response, Request
+from fastapi.security import HTTPBearer
 from httpx import HTTPError
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from supabase_auth.errors import AuthApiError, AuthRetryableError
@@ -7,6 +8,7 @@ from supabase_auth.errors import AuthApiError, AuthRetryableError
 from app.auth_client import get_auth_client
 
 router = APIRouter()
+bearer = HTTPBearer(auto_error=False, scheme_name='BearerAuth', bearerFormat='JWT')
 
 
 @router.get('/public/info', tags=['Public'])
@@ -14,7 +16,7 @@ def public_info():
     return {'message': 'Welcome stranger! This info is public.'}
 
 
-def require_user(request: Request, client=Depends(get_auth_client)):
+def require_user(request: Request, credentials=Depends(bearer), client=Depends(get_auth_client)):
     parts = request.headers.get('Authorization', '').split()
     if len(parts) != 2 or parts[0].lower() != 'bearer':
         raise HTTPException(401, 'Access token required', headers={'WWW-Authenticate': 'Bearer'})

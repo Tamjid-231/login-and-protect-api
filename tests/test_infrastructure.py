@@ -23,7 +23,10 @@ def test_env_is_ignored_and_example_documents_every_key():
     assert "POSTGRES_PASSWORD=dev" in example
     assert "POSTGRES_DB=tasks" in example
     assert "DATABASE_URL=postgresql://postgres:dev@db:5432/tasks" in example
-    assert not (PROJECT_ROOT / ".env").exists()
+    # A developer needs a local .env; the requirement is that Git excludes it.
+    import subprocess
+    result = subprocess.run(['git', 'check-ignore', '.env'], cwd=PROJECT_ROOT, capture_output=True, text=True)
+    assert result.returncode == 0
 
 
 def test_compose_starts_api_and_healthy_database_with_named_volume():

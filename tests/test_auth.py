@@ -120,3 +120,13 @@ def test_logout_targets_callers_session_and_has_no_body(client, auth_service):
         assert result.status_code == 204
         assert result.content == b''
     assert auth_service['logout'] == [('Bearer valid-token', 'local'), ('Bearer second-token', 'local')]
+
+
+def test_openapi_declares_bearer_security_only_on_protected_endpoints(client):
+    schema = client.get('/openapi.json').json()
+    assert schema.get('components', {}).get('securitySchemes', {}).get('BearerAuth', {}).get('scheme') == 'bearer'
+    for path, method in [('/protected/profile','get'), ('/protected/dashboard','get'), ('/auth/logout','post')]:
+        assert schema['paths'][path][method]['security'] == [{'BearerAuth': []}]
+    for path, method in [('/public/info','get'), ('/auth/signup','post'), ('/auth/login','post')]:
+        assert not schema['paths'][path][method].get('security')
+    assert client.get('/docs').status_code == 200

@@ -22,9 +22,9 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="Task API",
-    version="3.0.0",
-    description="A beginner-friendly PostgreSQL CRUD API for managing tasks.",
+    title="Task API - Auth, Login & Protect",
+    version="4.0.0",
+    description="Week 4: Supabase signup, login, logout and verified bearer authentication. Paste the access token into Authorize to use the protected routes.",
     lifespan=lifespan,
 )
 app.include_router(auth_router)
@@ -153,6 +153,10 @@ def custom_openapi():
                 responses.setdefault("400", {"description": "Invalid request body"})
             if "{task_id}" in path:
                 responses.setdefault("404", {"description": "Task not found"})
+            if path.startswith('/auth/') or path.startswith('/protected/'):
+                responses.setdefault('503', {'description': 'Authentication service unavailable'})
+            if operation.get('security') or path == '/auth/login':
+                responses.setdefault('401', {'description': 'Missing, malformed, invalid or expired credentials'})
     app.openapi_schema = schema
     return app.openapi_schema
 
