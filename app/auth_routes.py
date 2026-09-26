@@ -15,12 +15,19 @@ def public_info():
 
 
 @router.get('/protected/profile', tags=['Protected'])
-def profile(request: Request):
+def profile(request: Request, client=Depends(get_auth_client)):
     parts = request.headers.get('Authorization', '').split()
     if len(parts) != 2 or parts[0].lower() != 'bearer':
         raise HTTPException(401, 'Access token required', headers={'WWW-Authenticate': 'Bearer'})
-    # Stage 2 is deliberately fail-closed until remote verification is added.
-    raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'})
+    try:
+        result = client.auth.get_user(parts[1])
+    except (HTTPError, AuthRetryableError):
+        raise HTTPException(503, 'Authentication service unavailable') from None
+    except AuthApiError:
+        raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'}) from None
+    if result is None or result.user is None:
+        raise HTTPException(401, 'Invalid or expired token', headers={'WWW-Authenticate': 'Bearer'})
+    return safe_user(result.user)
 
 
 class Credentials(BaseModel):

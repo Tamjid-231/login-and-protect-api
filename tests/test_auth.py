@@ -83,3 +83,24 @@ def test_profile_rejects_missing_or_malformed_header(client, header):
     response = client.get('/protected/profile', headers={} if header is None else {'Authorization': header})
     assert response.status_code == 401
     assert response.json() == {'error': 'Access token required'}
+
+
+def test_verified_profile_only_returns_safe_metadata(client, auth_service):
+    result = client.get('/protected/profile', headers={'Authorization': 'Bearer valid-token'})
+    assert result.status_code == 200
+    assert set(result.json()) == {'id', 'email', 'created_at'}
+    assert result.json()['id'] == USER['id']
+    assert auth_service['verified'] == ['Bearer valid-token']
+
+
+@pytest.mark.parametrize('token', ['tampered-token', 'expired-token'])
+def test_provider_rejection_is_401(client, token):
+    result = client.get('/protected/profile', headers={'Authorization': f'Bearer {token}'})
+    assert result.status_code == 401
+    assert result.json() == {'error': 'Invalid or expired token'}
+
+
+def test_provider_outage_is_not_an_authentication_failure(client, auth_service):
+    auth_service['offline'] = True
+    result = client.get('/protected/profile', headers={'Authorization': 'Bearer valid-token'})
+    assert result.status_code == 503
