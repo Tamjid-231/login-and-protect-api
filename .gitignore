@@ -8,3 +8,6 @@ docs/superpowers/
 .coverage
 htmlcov/
 tmp/
+
+.env.*
+!.env.example
