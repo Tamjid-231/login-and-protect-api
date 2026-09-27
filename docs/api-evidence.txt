@@ -1,0 +1,159 @@
+Live curl -i verification: 2026-09-26T19:41:33.579043+00:00
+Real Docker API + PostgreSQL + hosted Supabase. Passwords and tokens redacted.
+
+Database health
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:33 GMT
+server: uvicorn
+content-length: 25
+content-type: application/json
+{
+  "status": "ok",
+  "db": "ok"
+}
+
+Public information
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:33 GMT
+server: uvicorn
+content-length: 52
+content-type: application/json
+{
+  "message": "Welcome stranger! This info is public."
+}
+
+Missing password
+HTTP/1.1 400 Bad Request
+date: Sat, 26 Sep 2026 19:41:33 GMT
+server: uvicorn
+content-length: 26
+content-type: application/json
+{
+  "error": "Field required"
+}
+
+Signup
+HTTP/1.1 201 Created
+date: Sat, 26 Sep 2026 19:41:34 GMT
+server: uvicorn
+content-length: 177
+content-type: application/json
+{
+  "user": {
+    "id": "3cd54853-4e38-485b-a2d5-d5741eaed8a7",
+    "email": "week4.9682a0b9b4@example.com",
+    "created_at": "2026-09-26T19:42:04.219966+00:00"
+  },
+  "email_confirmation_required": false
+}
+
+Login
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:35 GMT
+server: uvicorn
+content-length: 1042
+content-type: application/json
+cache-control: no-store
+{
+  "access_token": "[REDACTED: present]",
+  "refresh_token": "[REDACTED: present]",
+  "token_type": "bearer",
+  "expires_in": 3600
+}
+
+Verified profile
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:35 GMT
+server: uvicorn
+content-length: 132
+content-type: application/json
+{
+  "id": "3cd54853-4e38-485b-a2d5-d5741eaed8a7",
+  "email": "week4.9682a0b9b4@example.com",
+  "created_at": "2026-09-26T19:42:04.219966+00:00"
+}
+
+Shared guard dashboard
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:36 GMT
+server: uvicorn
+content-length: 89
+content-type: application/json
+{
+  "message": "Welcome to your dashboard!",
+  "user_id": "3cd54853-4e38-485b-a2d5-d5741eaed8a7"
+}
+
+Missing token
+HTTP/1.1 401 Unauthorized
+date: Sat, 26 Sep 2026 19:41:36 GMT
+server: uvicorn
+www-authenticate: Bearer
+content-length: 33
+content-type: application/json
+{
+  "error": "Access token required"
+}
+
+Malformed header
+HTTP/1.1 401 Unauthorized
+date: Sat, 26 Sep 2026 19:41:36 GMT
+server: uvicorn
+www-authenticate: Bearer
+content-length: 33
+content-type: application/json
+{
+  "error": "Access token required"
+}
+
+Tampered signature
+HTTP/1.1 401 Unauthorized
+date: Sat, 26 Sep 2026 19:41:37 GMT
+server: uvicorn
+www-authenticate: Bearer
+content-length: 36
+content-type: application/json
+{
+  "error": "Invalid or expired token"
+}
+
+Wrong login credentials
+HTTP/1.1 401 Unauthorized
+date: Sat, 26 Sep 2026 19:41:37 GMT
+server: uvicorn
+content-length: 37
+content-type: application/json
+{
+  "error": "Invalid login credentials"
+}
+
+Logout
+HTTP/1.1 204 No Content
+date: Sat, 26 Sep 2026 19:41:38 GMT
+server: uvicorn
+[empty body]
+
+Access token after logout (record actual behavior)
+HTTP/1.1 401 Unauthorized
+date: Sat, 26 Sep 2026 19:41:38 GMT
+server: uvicorn
+www-authenticate: Bearer
+content-length: 36
+content-type: application/json
+{
+  "error": "Invalid or expired token"
+}
+
+Fresh login for Swagger verification
+HTTP/1.1 200 OK
+date: Sat, 26 Sep 2026 19:41:39 GMT
+server: uvicorn
+content-length: 1042
+content-type: application/json
+cache-control: no-store
+{
+  "access_token": "[REDACTED: present]",
+  "refresh_token": "[REDACTED: present]",
+  "token_type": "bearer",
+  "expires_in": 3600
+}

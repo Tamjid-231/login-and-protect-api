@@ -32,7 +32,7 @@ def test_env_is_ignored_and_example_documents_every_key():
 def test_compose_starts_api_and_healthy_database_with_named_volume():
     compose = load_compose()
     assert set(compose["services"]) == {"api", "db"}
-    assert compose["services"]["api"]["ports"] == ["3000:3000"]
+    assert compose["services"]["api"]["ports"] == ["${PORT:-3000}:3000"]
     assert "db:5432" in read(".env.example")
     assert compose["services"]["api"]["depends_on"]["db"]["condition"] == "service_healthy"
     assert compose["services"]["db"]["volumes"] == [

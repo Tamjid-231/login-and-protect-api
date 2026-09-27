@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:3000
+@token = PASTE_ACCESS_TOKEN_HERE
+
+### Public
+GET {{baseUrl}}/public/info
+
+### Register
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{"email":"student@example.com","password":"Example-only-Long-Password!"}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{"email":"student@example.com","password":"Example-only-Long-Password!"}
+
+### Profile
+GET {{baseUrl}}/protected/profile
+Authorization: Bearer {{token}}
+
+### Shared guard
+GET {{baseUrl}}/protected/dashboard
+Authorization: Bearer {{token}}
+
+### Invalid token
+GET {{baseUrl}}/protected/profile
+Authorization: Bearer deliberately-invalid
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{token}}

@@ -24,7 +24,7 @@ def get_auth_client():
         try:
             part = key.split('.')[1]
             payload = json.loads(base64.urlsafe_b64decode(part + '=' * (-len(part) % 4)))
-            if payload.get('role') != 'anon':
+            if not isinstance(payload, dict) or payload.get('role') != 'anon':
                 raise HTTPException(503, 'Use a Supabase anon or publishable key')
         except (ValueError, UnicodeError):
             raise HTTPException(503, 'Invalid Supabase key configuration') from None

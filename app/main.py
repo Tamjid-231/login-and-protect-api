@@ -22,7 +22,7 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(
-    title="Task API - Auth, Login & Protect",
+    title="Login & Protect API",
     version="4.0.0",
     description="Week 4: Supabase signup, login, logout and verified bearer authentication. Paste the access token into Authorize to use the protected routes.",
     lifespan=lifespan,
@@ -77,9 +77,9 @@ async def validation_error_handler(_: Request, exc: RequestValidationError):
 def api_information():
     return {
         "name": "Task API",
-        "version": "3.0",
+        "version": "4.0",
         "database": "PostgreSQL",
-        "endpoints": ["/tasks"],
+        "endpoints": ["/tasks", "/auth/signup", "/auth/login", "/auth/logout", "/protected/profile", "/protected/dashboard", "/public/info"],
     }
 
 

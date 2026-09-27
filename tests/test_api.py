@@ -4,9 +4,9 @@ import pytest
 def test_root_describes_postgres_api(client):
     assert client.get("/").json() == {
         "name": "Task API",
-        "version": "3.0",
+        "version": "4.0",
         "database": "PostgreSQL",
-        "endpoints": ["/tasks"],
+        "endpoints": ["/tasks", "/auth/signup", "/auth/login", "/auth/logout", "/protected/profile", "/protected/dashboard", "/public/info"],
     }
 
 
