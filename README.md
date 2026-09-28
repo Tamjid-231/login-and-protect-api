@@ -136,3 +136,7 @@ The repository keeps the Week 3 history. The Week 4 work is divided into Stage 0
 - [FastAPI HTTPBearer](https://fastapi.tiangolo.com/reference/security/#fastapi.security.HTTPBearer)
 
 Optional stretch features and the AI-rematch bonus are not claimed as completed.
+
+---
+
+**Author:** Md. Tamjid Hossain
