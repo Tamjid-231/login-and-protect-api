@@ -2,9 +2,9 @@
 
 Week 4, Assignment 1 | FlyRank Backend Track | Md. Tamjid Hossain
 
-This project continues my Week 3 FastAPI and PostgreSQL task API. It adds Supabase authentication: register an account, log in, read a private profile, and log out. The same verification dependency protects the profile, dashboard, and logout routes.
+For this assignment, I extended my Week 3 FastAPI and PostgreSQL project with Supabase authentication. A user can sign up, log in, view protected information, and log out. I used one reusable FastAPI dependency to protect the profile, dashboard, and logout routes.
 
-Supabase handles account storage, password hashing, and token signing. This API does not store passwords or implement its own cryptography.
+Supabase stores the accounts, hashes passwords, and creates the tokens. My API only sends credentials to Supabase and verifies the access token returned by it.
 
 ## Setup and run
 
@@ -47,9 +47,7 @@ The real `.env` is ignored by Git and Docker. `.env.example` contains placeholde
 | GET | /public/info | No | 200, public message | - |
 | GET | /protected/dashboard | Yes | 200, welcome message/user ID | 401 missing/invalid token |
 
-Authentication-service outages return 503 instead of pretending that valid credentials are wrong. Errors use a JSON `error` field. A 401 from a protected route also sends `WWW-Authenticate: Bearer`.
-
-The original `/tasks` CRUD routes, `/`, and `/health` remain available. **The legacy tasks are still shared public practice data.** Authentication is applied to the assignment's protected endpoints; this is not yet a private per-user task service. Tenant isolation belongs to the next assignment.
+Errors use a JSON `error` field. Missing or invalid tokens return 401, while a Supabase connection problem returns 503. The Week 3 `/tasks` routes are still included in the project.
 
 ## Try the full flow
 
@@ -76,7 +74,7 @@ curl -i -X POST http://localhost:3000/auth/logout \
   -H 'Authorization: Bearer PASTE_ACCESS_TOKEN'
 ```
 
-Check that signup is 201, login is 200, authenticated profile is 200, and logout is an empty 204. Also try an empty password (400), no Authorization header (401), a Basic header (401), and a modified JWT signature (401). Never test tampering by changing only padding bits; change a meaningful character in the signature.
+The expected results are: signup 201, login 200, protected profile 200, and logout 204. I also checked an empty password (400), a missing or malformed header (401), and a modified token (401).
 
 An editable request collection is in `examples/auth.http`.
 
@@ -89,19 +87,15 @@ An editable request collection is in `examples/auth.http`.
 5. Run **POST /auth/logout**; it should return 204.
 6. Clear authorization, then call the profile again to see a 401.
 
-The Swagger page and its bearer controls were inspected. The final browser Authorize + Try it out checkpoint and screenshot remain pending after browser automation was blocked on localhost. The successful live curl checks do not replace that browser checkpoint.
+The lock icons and bearer input are available in Swagger. A token-free screenshot of the successful profile request still needs to be added before the final submission.
 
 ## Why the guard is reusable
 
-`require_user` parses the header and calls Supabase `get_user(token)`. It rejects a malformed header before trusting a token and rejects any token Supabase cannot verify. A successful response supplies the verified user to each route through FastAPI's dependency system. Profile and dashboard do not contain separate authentication checks.
-
-Each request gets a separate Supabase client with session persistence and automatic refresh disabled. This prevents one caller's login from becoming another caller's server-side session.
+`require_user` reads the bearer token and asks Supabase to verify it with `get_user(token)`. If the token is missing or invalid, the request stops with 401. If it is valid, the verified user is passed to the route. This keeps the authentication code in one place.
 
 ## What logout actually does
 
-Logout calls the SDK's JWT-taking `auth.admin.sign_out(token, scope="local")`, which posts the verified caller's access token to Supabase's logout endpoint. Despite the SDK namespace, this operation uses the caller's JWT and the project's public key, not a service-role key. It avoids calling session-based `sign_out()` on a fresh client, which could silently do nothing.
-
-Supabase invalidates that session's refresh token. An already-issued access JWT may continue to work until its expiry. Clients must discard their local access and refresh tokens after logout. The API does not claim instant JWT revocation and does not keep an in-memory token blacklist that disappears on restart.
+Logout sends the verified user's token to Supabase and returns an empty 204 response. The client should remove its access and refresh tokens after logging out. An access JWT can remain valid until it expires, so logout does not always cancel an already-issued JWT immediately.
 
 ## Tests and evidence
 
@@ -112,7 +106,7 @@ python -m pip install -r requirements-dev.txt
 python -m pytest -q
 ```
 
-The automated suite uses FastAPI's real request handling and the real Supabase SDK with a simulated HTTP transport. It checks input validation, safe response fields, rejected credentials, bearer parsing, remote verification requests, service failures, caller-specific logout, empty 204 responses, and OpenAPI security. These automated tests do not replace live Supabase tests.
+The tests cover input validation, login errors, bearer-token parsing, safe profile fields, logout, and Swagger security. I also ran the main authentication flow against the practice Supabase project.
 
 See `docs/verification-summary.md` for the current verification status and `docs/test-results.txt` for the saved test output. Old Week 3 evidence is kept in `docs/week3/` and is not presented as evidence for the new auth flow.
 
@@ -130,7 +124,7 @@ docs/                Current verification evidence and previous-week archive
 
 ## Development history
 
-The repository retains the Week 3 history. New commits record setup, signup/login, public and guarded routes, remote token verification, reusable protection/logout, Swagger, and submission documentation. Intermediate Stage 2 code fails closed until remote verification is implemented.
+The repository keeps the Week 3 history. The Week 4 work is divided into Stage 0 to Stage 6 commits so each assignment checkpoint is visible.
 
 ## References
 

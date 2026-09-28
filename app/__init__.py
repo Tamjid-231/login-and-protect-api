@@ -1,2 +1,2 @@
-"""Task API package."""
+"""Login and Protect API package."""
 

@@ -12,6 +12,6 @@
 - [x] Record at least six genuine development stage commits.
 - [x] Document setup, run command and endpoint/auth table in README.
 - [ ] Finish Swagger Authorize + Try it out and add a token-free screenshot.
-- [ ] Verify public GitHub publication.
+- [x] Verify public GitHub publication at https://github.com/Tamjid-231/login-and-protect-api.
 
 Unchecked items must be finished before calling this fully ready for submission.

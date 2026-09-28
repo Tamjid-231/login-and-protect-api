@@ -76,7 +76,7 @@ async def validation_error_handler(_: Request, exc: RequestValidationError):
 @app.get("/", tags=["System"])
 def api_information():
     return {
-        "name": "Task API",
+        "name": "Login & Protect API",
         "version": "4.0",
         "database": "PostgreSQL",
         "endpoints": ["/tasks", "/auth/signup", "/auth/login", "/auth/logout", "/protected/profile", "/protected/dashboard", "/public/info"],

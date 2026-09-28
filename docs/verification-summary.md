@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-67 tests passed on 27 September 2026, covering the existing task API and new authentication routes. The local run used Python 3.14; Docker uses Python 3.12. Dependency deprecation warnings and a sandbox cache warning are preserved in test-results.txt.
+67 tests passed on 28 September 2026, covering the existing task API and the new authentication routes. The local run used Python 3.14; Docker uses Python 3.12. Dependency deprecation warnings are preserved in test-results.txt.
 
 Auth tests use the real Supabase SDK with simulated HTTP responses. They check validation, safe fields, incorrect credentials, missing/malformed/invalid/expired tokens, service outages, caller-specific logout, empty 204 responses, and Swagger security declarations.
 
@@ -30,8 +30,10 @@ The post-logout result is specific to this online get_user/session check. It doe
 
 Swagger loaded with its expected locks and bearer controls. Authorized browser execution was not confirmed before browser policy blocked reconnection to localhost. Complete Authorize + Try it out and add a token-free screenshot before claiming all requirements are met.
 
-## Review
+## Final review
 
-Independent code review found no important functional or security defects. Malformed configuration payload handling and stale root metadata were corrected. Missing Supabase configuration returns 503; complete environment setup before using the endpoints.
+I checked the routes, tests, environment files, and Git history against the assignment requirements. The root endpoint now uses the correct project name. Missing Supabase configuration returns 503, so the environment must be set before using the auth endpoints.
+
+The public repository is https://github.com/Tamjid-231/login-and-protect-api and includes the Stage 0 to Stage 6 commits.
 
 Previous-week evidence is archived in docs/week3. Optional stretch goals and the AI-rematch bonus are not included.

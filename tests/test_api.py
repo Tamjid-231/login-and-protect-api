@@ -1,9 +1,9 @@
 import pytest
 
 
-def test_root_describes_postgres_api(client):
+def test_root_describes_login_and_protect_api(client):
     assert client.get("/").json() == {
-        "name": "Task API",
+        "name": "Login & Protect API",
         "version": "4.0",
         "database": "PostgreSQL",
         "endpoints": ["/tasks", "/auth/signup", "/auth/login", "/auth/logout", "/protected/profile", "/protected/dashboard", "/public/info"],

@@ -8,9 +8,5 @@ tests/test_api.py: 19 warnings
   C:\Users\LAPTOP HEAVEN\Documents\Codex\2026-09-26\files-mentioned-by-the-user-week\work\venv\Lib\site-packages\fastapi\routing.py:234: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
     is_coroutine = asyncio.iscoroutinefunction(dependant.call)
 
-..\..\..\..\Codex\2026-09-26\files-mentioned-by-the-user-week\work\venv\Lib\site-packages\_pytest\cacheprovider.py:469
-  C:\Users\LAPTOP HEAVEN\Documents\Codex\2026-09-26\files-mentioned-by-the-user-week\work\venv\Lib\site-packages\_pytest\cacheprovider.py:469: PytestCacheWarning: could not create cache path C:\Users\LAPTOP HEAVEN\Documents\FlyRank Intern'ship\Assignment\Week-4\Assignment 1\.pytest_cache\v\cache\nodeids: [WinError 183] Cannot create a file when that file already exists: "C:\\Users\\LAPTOP HEAVEN\\Documents\\FlyRank Intern'ship\\Assignment\\Week-4\\Assignment 1\\.pytest_cache\\v\\cache"
-    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
-
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
-67 passed, 21 warnings in 4.57s
+67 passed, 20 warnings in 1.09s
