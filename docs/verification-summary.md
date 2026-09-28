@@ -26,9 +26,9 @@ The API ran in Docker with PostgreSQL and the hosted practice project. A disposa
 
 The post-logout result is specific to this online get_user/session check. It does not guarantee universal instant JWT revocation; see the README's expiry explanation.
 
-## Remaining browser evidence
+## Swagger browser evidence
 
-Swagger loaded with its expected locks and bearer controls. Authorized browser execution was not confirmed before browser policy blocked reconnection to localhost. Complete Authorize + Try it out and add a token-free screenshot before claiming all requirements are met.
+Swagger loaded with its expected locks and bearer controls. On 28 September 2026, I authorized it with a temporary access token and ran `GET /protected/profile` through **Try it out**. The response was 200 and returned the test user's safe profile fields. The token-free screenshot is saved as `swagger-protected-profile-200.png`.
 
 ## Final review
 

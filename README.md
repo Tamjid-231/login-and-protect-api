@@ -87,7 +87,9 @@ An editable request collection is in `examples/auth.http`.
 5. Run **POST /auth/logout**; it should return 204.
 6. Clear authorization, then call the profile again to see a 401.
 
-The lock icons and bearer input are available in Swagger. A token-free screenshot of the successful profile request still needs to be added before the final submission.
+The lock icons and bearer input are available in Swagger. I used **Authorize**, ran **GET /protected/profile** with **Try it out**, and received a 200 response from the practice Supabase project.
+
+![Swagger protected profile returned 200](docs/swagger-protected-profile-200.png)
 
 ## Why the guard is reusable
 
